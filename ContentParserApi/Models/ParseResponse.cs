@@ -6,5 +6,5 @@ public class ParseResponse
 
     public int Count { get; set; }
 
-    public IEnumerable<object> Data { get; set; } = [];
+    public List<ParsedRecord> Data { get; set; } = [];
 }

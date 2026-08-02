@@ -1,4 +1,5 @@
 ﻿using ContentParserApi.Enums;
+using ContentParserApi.Models;
 
 namespace ContentParserApi.Parsers;
 
@@ -6,5 +7,5 @@ public interface IContentParser
 {
     ContentType Type { get; }
 
-    IEnumerable<object> Parse(string content);
+    List<ParsedRecord> Parse(string content);
 }
