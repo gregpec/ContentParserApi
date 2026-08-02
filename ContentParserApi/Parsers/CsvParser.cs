@@ -9,6 +9,35 @@ public class CsvParser : IContentParser
 
     public List<ParsedRecord> Parse(string content)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return new List<ParsedRecord>();
+        }
+
+        var lines = content.Split(
+    ['\r', '\n'],
+    StringSplitOptions.RemoveEmptyEntries);
+        // throw new NotImplementedException();
+        //return new List<ParsedRecord>();
+        // typ string[]
+        
+        var records = new List<ParsedRecord>();
+        var headers = lines[0].Split(',');
+       
+        for (int i = 1; i < lines.Length; i++)
+        {
+            var record = new ParsedRecord();
+            var values = lines[i].Split(',');
+            if (values.Length != headers.Length)
+            {
+                throw new FormatException("Liczba wartości nie zgadza się z liczbą nagłówków.");
+            }
+            for (int j = 0; j < headers.Length; j++)
+            {
+                record.Fields[headers[j].Trim()] = values[j].Trim();
+            }
+            records.Add(record);
+        }
+        return records;
     }
 }
