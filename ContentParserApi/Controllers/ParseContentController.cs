@@ -18,6 +18,14 @@ public class ParseContentController : ControllerBase
     [HttpPost("parse-content")]
     public IActionResult Parse(ParseRequest request)
     {
-        return Ok("Endpoint działa.");
+       
+        var parser = _parsers.FirstOrDefault(p => p.Type == request.Type);
+        if (parser == null)
+        {
+            return BadRequest("Brak parsera dla podanego typu.");
+        }
+        //return Ok("Endpoint działa.");
+        var records = parser.Parse(request.Content);
+        return Ok(records);
     }
 }
