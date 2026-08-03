@@ -43,39 +43,60 @@ public class ParseContentController : ControllerBase
             });
 
         }
-        try
-        {
-            var decodedContent = _decoder.Decode(request.Content);
-            var records = parser.Parse(decodedContent);
 
-            var response = new ParseResponse
+        
+            //var decodedContent = _decoder.Decode(request.Content);
+
+            string decodedContent;
+
+            try
             {
-                Status = "success",
-                Count = records.Count,
-                Data = records
-            };
-
-            return Ok(response);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new
+                decodedContent = _decoder.Decode(request.Content);
+            }
+            catch (FormatException)
             {
-                status = "error",
-                message = "Internal server error."
-            });
-        }
-    }
+                return BadRequest(new
+                {
+                    status = "error",
+                    message = "Invalid Base64 content."
+                });
+            }
 
-    //    return Ok("Endpoint działa.");
-    //    var decodedContent = _decoder.Decode(request.Content);
-    //    var records = parser.Parse(decodedContent);
-    //    var response = new ParseResponse
-    //    {
-    //        Status = "success",
-    //        Count = records.Count,
-    //        Data = records
-    //    };
-    //    return Ok(response);
-    //}
-}
+            try
+            {
+
+                var records = parser.Parse(decodedContent);
+
+                var response = new ParseResponse
+                {
+                    Status = "success",
+                    Count = records.Count,
+                    Data = records
+                };
+
+                return Ok(response);
+            }
+
+            catch (FormatException ex)
+            {
+                return BadRequest(new
+                {
+                    status = "error",
+                    message = ex.Message
+                });
+            }
+
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    status = "error",
+                    message = "Internal server error."
+                });
+            }
+        }
+      }
+
+
+
+    

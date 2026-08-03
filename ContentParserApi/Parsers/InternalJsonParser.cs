@@ -10,27 +10,39 @@ public class InternalJsonParser : IContentParser
 
     public List<ParsedRecord> Parse(string content)
     {
-        var data = JsonSerializer.Deserialize<List<Dictionary<string, object?>>>(content);
-
-        var records = new List<ParsedRecord>();
-
-        if (data == null)
+        if (string.IsNullOrWhiteSpace(content))
         {
-            return records;
+            return new List<ParsedRecord>();
         }
 
-        foreach (var item in data)
+        try
         {
-            var record = new ParsedRecord();
+            var data = JsonSerializer.Deserialize<List<Dictionary<string, object?>>>(content);
 
-            foreach (var field in item)
+            var records = new List<ParsedRecord>();
+
+            if (data == null)
             {
-                record.Fields[field.Key] = field.Value?.ToString();
+                return records;
             }
 
-            records.Add(record);
-        }
+            foreach (var item in data)
+            {
+                var record = new ParsedRecord();
 
-        return records;
+                foreach (var field in item)
+                {
+                    record.Fields[field.Key] = field.Value?.ToString();
+                }
+
+                records.Add(record);
+            }
+
+            return records;
+        }
+        catch (JsonException)
+        {
+            throw new FormatException("Invalid JSON format.");
+        }
     }
 }
