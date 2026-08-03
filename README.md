@@ -41,22 +41,34 @@ HTTPS
 https://localhost:7097/swagger
 ```
 
+---
+
 ## Endpoint
 
 ```
 POST /api/v1/parse-content
 ```
 
-Content-Type
+**Content-Type**
 
 ```
 application/json
 ```
 
-Supported content types
+Supported content types:
 
-- CSV
-- INTERNAL_JSON
+- `CSV`
+- `INTERNAL_JSON`
+
+---
+
+## HTTP status codes
+
+| Status Code | Description |
+|--------------|-------------|
+| **200 OK** | Request processed successfully. |
+| **400 Bad Request** | Invalid request. Returned when the parser type is unsupported, the Base64 content is invalid, or the CSV/INTERNAL_JSON data cannot be parsed. |
+| **500 Internal Server Error** | An unexpected server error occurred while processing the request. |
 
 ---
 
@@ -111,12 +123,12 @@ Example request:
 
 ---
 
-## Example curl request
+## Example PowerShell / curl request
 
-```bash
-curl.exe -k -L ^
-  -X POST https://localhost:7097/api/v1/parse-content ^
-  -H "Content-Type: application/json" ^
+```powershell
+curl.exe -k -L `
+  -X POST https://localhost:7097/api/v1/parse-content `
+  -H "Content-Type: application/json" `
   --data-binary "@request.json"
 ```
 
@@ -162,7 +174,18 @@ Example `request.json`:
 
 ---
 
-## Error response
+## Example error responses
+
+### Unsupported parser type
+
+```json
+{
+  "status": "error",
+  "message": "Unsupported parser type 'XML'."
+}
+```
+
+### Invalid Base64 content
 
 ```json
 {
@@ -171,9 +194,20 @@ Example `request.json`:
 }
 ```
 
-Possible error messages:
+### Invalid JSON format
 
-- Unsupported parser type
-- Invalid Base64 content
-- Invalid JSON format
-- CSV parsing error
+```json
+{
+  "status": "error",
+  "message": "Invalid JSON format."
+}
+```
+
+### Invalid CSV
+
+```json
+{
+  "status": "error",
+  "message": "Liczba wartości nie zgadza się z liczbą nagłówków."
+}
+```
