@@ -24,22 +24,58 @@ public class ParseContentController : ControllerBase
     [HttpPost("parse-content")]
     public IActionResult Parse(ParseRequest request)
     {
-
-        Console.WriteLine("Parse endpoint called");
+        if (request == null)
+        {
+            return BadRequest(new
+            {
+                status = "error",
+                message = "Request body is required."
+            });
+        }
+        //Console.WriteLine("Parse endpoint called");
         var parser = _parsers.FirstOrDefault(p => p.Type == request.Type);
         if (parser == null)
         {
-            return BadRequest("Brak parsera dla podanego typu.");
+            return BadRequest(new
+            {
+                status = "error",
+                message = $"Unsupported parser type '{request.Type}'."
+            });
+
         }
-        //return Ok("Endpoint działa.");
-        var decodedContent = _decoder.Decode(request.Content);
-        var records = parser.Parse(decodedContent);
-        var response = new ParseResponse
+        try
         {
-            Success = true,
-            Count = records.Count,
-            Data = records
-        };
-        return Ok(response);
+            var decodedContent = _decoder.Decode(request.Content);
+            var records = parser.Parse(decodedContent);
+
+            var response = new ParseResponse
+            {
+                Status = "success",
+                Count = records.Count,
+                Data = records
+            };
+
+            return Ok(response);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                status = "error",
+                message = "Internal server error."
+            });
+        }
     }
+
+    //    return Ok("Endpoint działa.");
+    //    var decodedContent = _decoder.Decode(request.Content);
+    //    var records = parser.Parse(decodedContent);
+    //    var response = new ParseResponse
+    //    {
+    //        Status = "success",
+    //        Count = records.Count,
+    //        Data = records
+    //    };
+    //    return Ok(response);
+    //}
 }

@@ -3,7 +3,7 @@ namespace ContentParserApi.Models;
 
 public class ParseResponse
 {
-    public bool Success { get; set; }
+    public string Status { get; set; } = string.Empty;
 
     public int Count { get; set; }
 
