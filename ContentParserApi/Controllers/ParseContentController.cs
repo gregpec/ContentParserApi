@@ -34,6 +34,12 @@ public class ParseContentController : ControllerBase
         //return Ok("Endpoint działa.");
         var decodedContent = _decoder.Decode(request.Content);
         var records = parser.Parse(decodedContent);
-        return Ok(records);
+        var response = new ParseResponse
+        {
+            Success = true,
+            Count = records.Count,
+            Data = records
+        };
+        return Ok(response);
     }
 }

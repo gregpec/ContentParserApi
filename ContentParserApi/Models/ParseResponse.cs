@@ -1,4 +1,5 @@
-﻿namespace ContentParserApi.Models;
+﻿using ContentParserApi.Models;
+namespace ContentParserApi.Models;
 
 public class ParseResponse
 {
