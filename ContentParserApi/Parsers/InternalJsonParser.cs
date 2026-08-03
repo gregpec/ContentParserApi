@@ -1,5 +1,7 @@
-﻿using ContentParserApi.Enums;
+﻿using System.Text.Json;
+using ContentParserApi.Enums;
 using ContentParserApi.Models;
+
 namespace ContentParserApi.Parsers;
 
 public class InternalJsonParser : IContentParser
@@ -8,6 +10,27 @@ public class InternalJsonParser : IContentParser
 
     public List<ParsedRecord> Parse(string content)
     {
-        throw new NotImplementedException();
+        var data = JsonSerializer.Deserialize<List<Dictionary<string, object?>>>(content);
+
+        var records = new List<ParsedRecord>();
+
+        if (data == null)
+        {
+            return records;
+        }
+
+        foreach (var item in data)
+        {
+            var record = new ParsedRecord();
+
+            foreach (var field in item)
+            {
+                record.Fields[field.Key] = field.Value?.ToString();
+            }
+
+            records.Add(record);
+        }
+
+        return records;
     }
 }
