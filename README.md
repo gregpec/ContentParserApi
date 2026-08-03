@@ -1,540 +1,179 @@
-# \# ContentParserApi
-
-# 
-
-# ASP.NET Core Web API for parsing different input formats into a standardized data structure.
-
-# 
-
-# \## Features
-
-# 
-
-# \- CSV parser
-
-# \- Internal JSON parser (in progress)
-
-# \- Dependency Injection
-
-# \- Dynamic parser selection
-
-# \- Swagger (OpenAPI)
-
-# \- cURL support
-
-# \- Base64 input support (planned)
-
-# 
-
-# \---
-
-# 
-
-# \## Technologies
-
-# 
-
-# \- .NET 8
-
-# \- ASP.NET Core Web API
-
-# \- C#
-
-# \- Swagger / OpenAPI
-
-# \- System.Text.Json
-
-# 
-
-# \---
-
-# 
-
-# \## Project Structure
-
-# 
-
-# ```
-
 # ContentParserApi
 
-# │
+ContentParserApi is an ASP.NET Core Web API that accepts Base64 encoded CSV or INTERNAL_JSON data, parses it, and returns the result in a unified JSON format.
 
-# ├── Controllers
+## Requirements
 
-# ├── Enums
+- .NET 8 SDK or newer
 
-# ├── Models
+## Run the application
 
-# ├── Parsers
+Clone the repository:
 
-# └── Program.cs
+```bash
+git clone https://github.com/gregpec/ContentParserApi.git
+cd ContentParserApi
+```
 
-# ```
+Restore NuGet packages:
 
-# 
+```bash
+dotnet restore
+```
 
-# \---
+Run the application:
 
-# 
+```bash
+dotnet run --project ContentParserApi
+```
 
-# \## Supported Content Types
+## Swagger
 
-# 
+HTTP
 
-# | Type | Status |
+```
+http://localhost:5242/swagger
+```
 
-# |------|--------|
+HTTPS
 
-# | CSV | ✅ |
+```
+https://localhost:7097/swagger
+```
 
-# | INTERNAL\_JSON | 🚧 |
+## Endpoint
 
-# 
+```
+POST /api/v1/parse-content
+```
 
-# \---
+Content-Type
 
-# 
+```
+application/json
+```
 
-# \# Getting Started
-
-# 
-
-# \## Clone repository
-
-# 
-
-# ```bash
-
-# git clone https://github.com/gregpec/ContentParserApi.git
-
-# ```
-
-# 
-
-# \## Navigate to the project
-
-# 
-
-# ```powershell
-
-# cd ContentParserApi
-
-# ```
-
-# 
-
-# \## Run the application
-
-# 
-
-# ```powershell
-
-# dotnet run
-
-# ```
-
-# 
-
-# Example output:
-
-# 
-
-# ```text
-
-# Now listening on: http://localhost:5242
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# Swagger
-
-# 
-
-# Open:
-
-# 
-
-# ```
-
-# http://localhost:5242/swagger
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# API
-
-# 
-
-# \## Endpoint
-
-# 
-
-# ```
-
-# POST /api/v1/parse-content
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \## Sample Request
-
-# 
-
-# ```json
-
-# {
-
-# &#x20; "type": "CSV",
-
-# &#x20; "content": "Id,Name,Age\\n1,Jan,20\\n2,Anna,25"
-
-# }
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \## Sample Response
-
-# 
-
-# ```json
-
-# \[
-
-# &#x20; {
-
-# &#x20;   "fields": {
-
-# &#x20;     "Id": "1",
-
-# &#x20;     "Name": "Jan",
-
-# &#x20;     "Age": "20"
-
-# &#x20;   }
-
-# &#x20; },
-
-# &#x20; {
-
-# &#x20;   "fields": {
-
-# &#x20;     "Id": "2",
-
-# &#x20;     "Name": "Anna",
-
-# &#x20;     "Age": "25"
-
-# &#x20;   }
-
-# &#x20; }
-
-# ]
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# Testing with cURL
-
-# 
-
-# Create \*\*request.json\*\*
-
-# 
-
-# ```json
-
-# {
-
-# &#x20; "type": "CSV",
-
-# &#x20; "content": "Id,Name,Age\\n1,Jan,20\\n2,Anna,25"
-
-# }
-
-# ```
-
-# 
-
-# Run:
-
-# 
-
-# ```powershell
-
-# curl.exe -X POST http://localhost:5242/api/v1/parse-content `
-
-# \-H "Content-Type: application/json" `
-
-# \--data-binary "@request.json"
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# Creating Base64 Content (PowerShell)
-
-# 
-
-# \## Create CSV file
-
-# 
-
-# ```powershell
-
-# @"
-
-# Id,Name,Age
-
-# 1,Jan,20
-
-# 2,Anna,25
-
-# "@ | Set-Content .\\dane.csv
-
-# ```
-
-# 
-
-# \## Encode to Base64
-
-# 
-
-# ```powershell
-
-# $base64 = \[Convert]::ToBase64String(
-
-# &#x20;   \[Text.Encoding]::UTF8.GetBytes(
-
-# &#x20;       (Get-Content .\\dane.csv -Raw)
-
-# &#x20;   )
-
-# )
-
-# ```
-
-# 
-
-# Display the encoded string:
-
-# 
-
-# ```powershell
-
-# $base64
-
-# ```
-
-# 
-
-# Example output:
-
-# 
-
-# ```text
-
-# SWQsTmFtZSxBZ2UKMSxKYW4sMjAKMixBbm5hLDI1
-
-# ```
-
-# 
-
-# Create \*\*request.json\*\*
-
-# 
-
-# ```powershell
-
-# @"
-
-# {
-
-# &#x20; "type": "CSV",
-
-# &#x20; "content": "$base64"
-
-# }
-
-# "@ | Set-Content .\\request.json
-
-# ```
-
-# 
-
-# Send request:
-
-# 
-
-# ```powershell
-
-# curl.exe -X POST http://localhost:5242/api/v1/parse-content `
-
-# \-H "Content-Type: application/json" `
-
-# \--data-binary "@request.json"
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# Architecture
-
-# 
-
-# ```
-
-# HTTP Request
-
-# &#x20;     │
-
-# &#x20;     ▼
-
-# ParseContentController
-
-# &#x20;     │
-
-# &#x20;     ▼
-
-# IEnumerable<IContentParser>
-
-# &#x20;     │
-
-# &#x20;     ▼
-
-# CsvParser / InternalJsonParser
-
-# &#x20;     │
-
-# &#x20;     ▼
-
-# List<ParsedRecord>
-
-# &#x20;     │
-
-# &#x20;     ▼
-
-# JSON Response
-
-# ```
-
-# 
-
-# \---
-
-# 
-
-# \# Current Status
-
-# 
-
-# \### Implemented
-
-# 
-
-# \- CSV parser
-
-# \- Parser interface
-
-# \- Dependency Injection
-
-# \- Dynamic parser selection
-
-# \- Swagger support
-
-# \- cURL testing
-
-# \- CSV validation
-
-# \- Dynamic field mapping
-
-# 
-
-# \### Planned
-
-# 
-
-# \- Base64 decoding
-
-# \- Internal JSON parser
-
-# \- Unit tests
-
-# \- Docker support
-
-# \- CI/CD
-
-# 
-
-# \---
-
-# 
-
-# \# Future Improvements
-
-# 
-
-# \- Support for additional file formats
-
-# \- File upload endpoint
-
-# \- Logging
-
-# \- Exception middleware
-
-# \- Performance improvements
-
-# 
-
-# \---
-
-# 
-
-# \# Author
-
-# 
-
-# \*\*Grzegorz Pęksa\*\*
-
-# 
-
-# GitHub:
-
-# 
-
-# https://github.com/gregpec
-
+Supported content types
+
+- CSV
+- INTERNAL_JSON
+
+---
+
+## Example CSV data
+
+```csv
+Id,Brand,Processor,RAM,SSD
+1,Lenovo ThinkPad T14,Intel Core i5-1240P,16 GB,512 GB
+2,Dell Latitude 7440,Intel Core i7-1365U,32 GB,1 TB
+```
+
+Example request:
+
+```json
+{
+  "type": "CSV",
+  "content": "<Base64 encoded CSV content>"
+}
+```
+
+---
+
+## Example INTERNAL_JSON data
+
+```json
+[
+  {
+    "Id": 1,
+    "Brand": "Lenovo ThinkPad T14",
+    "Processor": "Intel Core i5-1240P",
+    "RAM": "16 GB",
+    "SSD": "512 GB"
+  },
+  {
+    "Id": 2,
+    "Brand": "Dell Latitude 7440",
+    "Processor": "Intel Core i7-1365U",
+    "RAM": "32 GB",
+    "SSD": "1 TB"
+  }
+]
+```
+
+Example request:
+
+```json
+{
+  "type": "INTERNAL_JSON",
+  "content": "<Base64 encoded JSON content>"
+}
+```
+
+---
+
+## Example curl request
+
+```bash
+curl.exe -k -L ^
+  -X POST https://localhost:7097/api/v1/parse-content ^
+  -H "Content-Type: application/json" ^
+  --data-binary "@request.json"
+```
+
+Example `request.json`:
+
+```json
+{
+  "type": "CSV",
+  "content": "<Base64 encoded CSV content>"
+}
+```
+
+---
+
+## Successful response
+
+```json
+{
+  "status": "success",
+  "count": 2,
+  "data": [
+    {
+      "fields": {
+        "Id": "1",
+        "Brand": "Lenovo ThinkPad T14",
+        "Processor": "Intel Core i5-1240P",
+        "RAM": "16 GB",
+        "SSD": "512 GB"
+      }
+    },
+    {
+      "fields": {
+        "Id": "2",
+        "Brand": "Dell Latitude 7440",
+        "Processor": "Intel Core i7-1365U",
+        "RAM": "32 GB",
+        "SSD": "1 TB"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Error response
+
+```json
+{
+  "status": "error",
+  "message": "Invalid Base64 content."
+}
+```
+
+Possible error messages:
+
+- Unsupported parser type
+- Invalid Base64 content
+- Invalid JSON format
+- CSV parsing error
