@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="ContentParserApi.Tests/ContentParserApi.Tests.csproj" />
-  <Project Path="ContentParserApi/ContentParserApi.csproj" />
-</Solution>
