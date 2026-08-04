@@ -208,6 +208,18 @@ Example `request.json`:
 ```json
 {
   "status": "error",
-  "message": "Liczba wartości nie zgadza się z liczbą nagłówków."
+  "message": "The number of values ​​does not match the number of headers."
 }
 ```
+## Running tests
+
+Run all tests:
+
+```powershell
+dotnet test
+```
+
+The solution contains:
+- Unit tests for CsvParser
+- Unit tests for InternalJsonParser
+- Integration test for ParseContentController

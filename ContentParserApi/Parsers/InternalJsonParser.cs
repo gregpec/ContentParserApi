@@ -14,18 +14,14 @@ public class InternalJsonParser : IContentParser
         {
             return new List<ParsedRecord>();
         }
-
         try
         {
             var data = JsonSerializer.Deserialize<List<Dictionary<string, object?>>>(content);
-
             var records = new List<ParsedRecord>();
-
             if (data == null)
             {
                 return records;
             }
-
             foreach (var item in data)
             {
                 var record = new ParsedRecord();
@@ -34,10 +30,8 @@ public class InternalJsonParser : IContentParser
                 {
                     record.Fields[field.Key] = field.Value?.ToString();
                 }
-
                 records.Add(record);
             }
-
             return records;
         }
         catch (JsonException)

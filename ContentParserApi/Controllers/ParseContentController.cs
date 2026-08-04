@@ -32,7 +32,6 @@ public class ParseContentController : ControllerBase
                 message = "Request body is required."
             });
         }
-        //Console.WriteLine("Parse endpoint called");
         var parser = _parsers.FirstOrDefault(p => p.Type == request.Type);
         if (parser == null)
         {
@@ -43,12 +42,7 @@ public class ParseContentController : ControllerBase
             });
 
         }
-
-        
-            //var decodedContent = _decoder.Decode(request.Content);
-
             string decodedContent;
-
             try
             {
                 decodedContent = _decoder.Decode(request.Content);
@@ -61,10 +55,8 @@ public class ParseContentController : ControllerBase
                     message = "Invalid Base64 content."
                 });
             }
-
             try
             {
-
                 var records = parser.Parse(decodedContent);
 
                 var response = new ParseResponse
@@ -76,7 +68,6 @@ public class ParseContentController : ControllerBase
 
                 return Ok(response);
             }
-
             catch (FormatException ex)
             {
                 return BadRequest(new
@@ -85,7 +76,6 @@ public class ParseContentController : ControllerBase
                     message = ex.Message
                 });
             }
-
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new

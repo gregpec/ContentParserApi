@@ -13,14 +13,7 @@ public class CsvParser : IContentParser
         {
             return new List<ParsedRecord>();
         }
-
-        var lines = content.Split(
-    ['\r', '\n'],
-    StringSplitOptions.RemoveEmptyEntries);
-        // throw new NotImplementedException();
-        //return new List<ParsedRecord>();
-        // typ string[]
-        
+        var lines = content.Split(['\r', '\n'],StringSplitOptions.RemoveEmptyEntries);
         var records = new List<ParsedRecord>();
         var headers = lines[0].Split(',');
        
@@ -30,7 +23,7 @@ public class CsvParser : IContentParser
             var values = lines[i].Split(',');
             if (values.Length != headers.Length)
             {
-                throw new FormatException("Liczba wartości nie zgadza się z liczbą nagłówków.");
+                throw new FormatException("The number of values ​​does not match the number of headers.");
             }
             for (int j = 0; j < headers.Length; j++)
             {
